@@ -1,0 +1,14 @@
+{
+    "db": "./db/dev.db",
+    "version": "0.0.0",
+    "bucket": "experiements",
+    "cluster": "mahti",
+    "node": "interactive",
+    "tool": "swift",
+    "data_dir": "/scratch/project_2004396/vinh/data",
+    "file_sizes": [1, 5, 10, 20, 50],
+    "file_split_sizes": [0],
+    "segment_sizes": [5],
+    "threads": [2],
+    "cores": [8]
+}

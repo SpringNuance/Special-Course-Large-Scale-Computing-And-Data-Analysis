@@ -1,0 +1,223 @@
+#include "solver.h"
+
+#include <stdbool.h>
+
+#include "buffer.h"
+#include "error.h"
+#include "morton.h"
+#include "utils.h"
+
+#define NGHOST (1)
+#define IX(i, j) spatial_to_morton((uint2_64){i, j})
+
+static const size_t nx  = 64;
+static const size_t ny  = 64;
+static const double dsx = 1e-3;
+static const double dsy = 1e-3;
+const double cs2        = 1.0;
+const double nu         = 1e-3;
+const double dt         = 0.5;
+
+static inline double
+first_derivative(const double* pencil, const double inv_ds)
+{
+#if (2 * NGHOST) == 2
+    const double coefficients[] = {0, (double)(1. / 2.)};
+#elif (2 * NGHOST) == 4
+    const double coefficients[] = {0, (double)(2.0 / 3.0),
+                                   (double)(-1.0 / 12.0)};
+#elif (2 * NGHOST) == 6
+    const double coefficients[] = {
+        0,
+        (double)(3.0 / 4.0),
+        (double)(-3.0 / 20.0),
+        (double)(1.0 / 60.0),
+    };
+#elif (2 * NGHOST) == 8
+    const double coefficients[] = {
+        0,
+        (double)(4.0 / 5.0),
+        (double)(-1.0 / 5.0),
+        (double)(4.0 / 105.0),
+        (double)(-1.0 / 280.0),
+    };
+#endif
+
+    double res = 0;
+    for (int i = 1; i <= NGHOST; ++i)
+        res += coefficients[i] * (pencil[NGHOST + i] - pencil[NGHOST - i]);
+
+    return res * inv_ds;
+}
+
+static inline double
+second_derivative(const double* pencil, const double inv_ds)
+{
+#if (2 * NGHOST) == 2
+    const double coefficients[] = {-2, 1};
+#elif (2 * NGHOST) == 4
+    const double coefficients[] = {
+        (double)(-5.0 / 2.0),
+        (double)(4.0 / 3.0),
+        (double)(-1.0 / 12.0),
+    };
+#elif (2 * NGHOST) == 6
+    const double coefficients[] = {
+        (double)(-49.0 / 18.0),
+        (double)(3.0 / 2.0),
+        (double)(-3.0 / 20.0),
+        (double)(1.0 / 90.0),
+    };
+#elif (2 * NGHOST) == 8
+    const double coefficients[] = {
+        (double)(-205.0 / 72.0), (double)(8.0 / 5.0),    (double)(-1.0 / 5.0),
+        (double)(8.0 / 315.0),   (double)(-1.0 / 560.0),
+    };
+#endif
+
+    double res = coefficients[0] * pencil[NGHOST];
+
+    for (int i = 1; i <= NGHOST; ++i)
+        res += coefficients[i] * (pencil[NGHOST + i] + pencil[NGHOST - i]);
+
+    return res * inv_ds * inv_ds;
+}
+
+static inline double
+derx(const double* arr, const int i, const int j)
+{
+    double pencil[(2 * NGHOST) + 1];
+    for (int offset = 0; offset < (2 * NGHOST) + 1; ++offset)
+        pencil[offset] = arr[IX(i + offset - (2 * NGHOST) / 2, j)];
+
+    return first_derivative(pencil, dsx);
+}
+
+static inline double
+derxx(const double* arr, const int i, const int j)
+{
+    double pencil[(2 * NGHOST) + 1];
+    for (int offset = 0; offset < (2 * NGHOST) + 1; ++offset)
+        pencil[offset] = arr[IX(i + offset - (2 * NGHOST) / 2, j)];
+
+    return second_derivative(pencil, dsx);
+}
+
+static inline double
+dery(const double* arr, const int i, const int j)
+{
+    double pencil[(2 * NGHOST) + 1];
+    for (int offset = 0; offset < (2 * NGHOST) + 1; ++offset)
+        pencil[offset] = arr[IX(i, j + offset - (2 * NGHOST) / 2)];
+
+    return first_derivative(pencil, dsy);
+}
+
+static inline double
+deryy(const double* arr, const int i, const int j)
+{
+    double pencil[(2 * NGHOST) + 1];
+    for (int offset = 0; offset < (2 * NGHOST) + 1; ++offset)
+        pencil[offset] = arr[IX(i, j + offset - (2 * NGHOST) / 2)];
+
+    return second_derivative(pencil, dsy);
+}
+
+typedef struct {
+    double x, y;
+} double2;
+
+static inline double2
+gradient(const double* in, const size_t i, const size_t j)
+{
+    return (double2){
+        .x = derx(in, i, j),
+        .y = dery(in, j, j),
+    };
+}
+
+static inline double
+laplace(const double* in, const size_t i, const size_t j)
+{
+    return derxx(in, i, j) + deryy(in, i, j);
+}
+
+static inline double
+dot(const double2 a, const double2 b)
+{
+    return a.x * b.x + a.y * b.y;
+}
+
+static inline double
+divergence(const double* inx, const double* iny, const size_t i, const size_t j)
+{
+    return derx(inx, i, j) + dery(iny, i, j);
+}
+
+static double
+continuity(const double* lnrho, const double* ux, const double* uy,
+           const size_t i, const size_t j)
+{
+    const double2 uu         = (double2){.x = ux[IX(i, j)], .y = uy[IX(i, j)]};
+    const double2 grad_lnrho = gradient(lnrho, i, j);
+
+    return -(dot(uu, grad_lnrho)) - divergence(ux, uy, i, j);
+}
+
+static double2
+momentum(const double* lnrho, const double* ux, const double* uy,
+         const size_t i, const size_t j)
+{
+
+    const double2 uu         = (double2){.x = ux[IX(i, j)], .y = uy[IX(i, j)]};
+    const double2 grad_lnrho = gradient(lnrho, i, j);
+    const double2 grad_ux    = gradient(ux, i, j);
+    const double2 grad_uy    = gradient(uy, i, j);
+
+    // Note: stress tensor and grad div term skipped here
+    return (double2){
+        .x = -(dot(uu, grad_ux)) + cs2 * grad_lnrho.x +
+             nu * (laplace(ux, i, j)),
+        .y = -(dot(uu, grad_uy)) + cs2 * grad_lnrho.y +
+             nu * (laplace(uy, i, j)),
+    };
+}
+
+static bool
+within_ghost(const size_t i, const size_t j)
+{
+    return i < NGHOST || i >= nx - NGHOST || j < NGHOST || j >= ny - NGHOST;
+}
+
+void
+update(const Grid in, Grid* out)
+{
+    ERRCHK(NUM_FIELDS > 0);
+
+    const size_t count = in.field[0].count;
+
+    const double* lnrho = in.field[LNRHO].data;
+    const double* ux    = in.field[UX].data;
+    const double* uy    = in.field[UY].data;
+
+    ERRCHK(nx * ny == count);
+
+// Euler integration step
+#pragma omp parallel for
+    for (size_t idx = 0; idx < count; ++idx) {
+
+        const uint2_64 spatial = morton_to_spatial(idx);
+        const size_t i         = spatial.i;
+        const size_t j         = spatial.j;
+
+        if (within_ghost(i, j))
+            continue;
+
+        out->field[LNRHO].data[idx] = lnrho[idx] +
+                                      continuity(lnrho, ux, uy, i, j) * dt;
+
+        const double2 mom        = momentum(lnrho, ux, uy, i, j);
+        out->field[UX].data[idx] = ux[idx] + mom.x * dt;
+        out->field[UY].data[idx] = uy[idx] + mom.y * dt;
+    }
+}

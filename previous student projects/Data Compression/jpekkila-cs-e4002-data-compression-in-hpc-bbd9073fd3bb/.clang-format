@@ -1,0 +1,11 @@
+BasedOnStyle: LLVM
+IndentWidth: 2
+UseTab: Never
+BreakBeforeBraces: Stroustrup
+AlignConsecutiveAssignments: true
+AlignAfterOpenBracket: true
+AlwaysBreakAfterReturnType: TopLevelDefinitions
+PointerAlignment: Left
+PenaltyBreakAssignment: 10000
+PenaltyBreakBeforeFirstCallParameter: 10000
+ColumnLimit: 80

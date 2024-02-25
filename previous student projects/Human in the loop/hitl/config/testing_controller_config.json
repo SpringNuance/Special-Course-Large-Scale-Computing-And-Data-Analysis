@@ -1,0 +1,10 @@
+{
+  "redis_address": "localhost",
+  "redis_port": 6379,
+  "source": "testing",
+  "target": "result",
+  "notification": "reporting",
+  "process_name": "test_model",
+  "process_config_file": "config/testing_config.json"
+  "num_threads": 3
+}

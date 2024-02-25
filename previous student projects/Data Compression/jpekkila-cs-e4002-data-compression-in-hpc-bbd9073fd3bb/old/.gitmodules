@@ -1,0 +1,6 @@
+[submodule "external/zfp"]
+	path = external/zfp
+	url = https://github.com/LLNL/zfp.git
+[submodule "external/nvcomp"]
+	path = external/nvcomp
+	url = https://github.com/NVIDIA/nvcomp.git

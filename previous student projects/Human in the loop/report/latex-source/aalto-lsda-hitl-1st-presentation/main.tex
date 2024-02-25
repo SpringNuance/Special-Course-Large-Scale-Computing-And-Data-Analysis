@@ -1,0 +1,206 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{bibentry}
+
+%------------------------------------------------------------
+%This block of code defines the information to appear in the
+%Title page
+\title[HITL ML/DA Workflows] %optional
+{Human-in-the-loop for Machine Learning/Data Analytics Workflows}
+\subtitle{First Presentation}
+
+\author[An Dan Nguyen] % (optional)
+{An Dan Nguyen \\ dan.nguyen@aalto.fi}
+
+\date[LSCA-2021] % (optional)
+{Large-scale Computing and Data Analysis\\April 2021}
+
+%End of title page configuration block
+%------------------------------------------------------------
+
+
+%------------------------------------------------------------
+%The next block of commands puts the table of contents at the 
+%beginning of each section and highlights the current section:
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+%------------------------------------------------------------
+
+
+\begin{document}
+%The next statement creates the title page.
+\frame{\titlepage}
+
+%---------------------------------------------------------
+%This block of code is for the table of contents after
+%the title page
+\begin{frame}
+\frametitle{Table of Contents}
+\tableofcontents
+\end{frame}
+%---------------------------------------------------------
+
+
+\section{Motivation}
+%---------------------------------------------------------
+\begin{frame}
+\frametitle{Motivation}
+
+\begin{itemize}
+    \item <1-> Want to investigate human dynamics topics related to Machine Learning/Data Analysis (ML/DA) workflows.
+    \item <2-> Bigger theme of interest is the collaboration between human and machine.
+    \item <3-> Got the interest when briefly participate in a research project about human-in-the-loop in new Air Traffic Management systems.
+    \item <4-> Some of the concepts in these systems can be applied in the ML/DA workflows (e.g. trust, level of automation analysis framework \cite{lundberg2019human}).
+\end{itemize}
+
+\end{frame}
+%---------------------------------------------------------
+
+
+\section{Preliminary Plan}
+%---------------------------------------------------------
+\begin{frame}{Preliminary Plan}
+\begin{enumerate}
+    \item <1-> A literature review on current status of human-in-the-loop in ML pipelines and workflow-based data analysis. Can potentially reference other fields if there are not much information \cite{lundberg2019human}.
+    \item <2-> Based on the literature review, identify one area to investigate further.
+    \item <3-> Identify potential improvement(s) in that area.
+    \item <4-> Suggest and develop the concepts for the improvements (a proof of concept as a software may not fit in the scope of this course).
+    \item <5-> Write and present results.
+\end{enumerate}
+\end{frame}
+%---------------------------------------------------------
+
+
+\section{Literature Review}
+%---------------------------------------------------------
+\begin{frame}{Literature Review}
+\begin{itemize}
+    \item AutoML Systems \cite{shang2019democratizing} \cite{elshawi2019automated} \cite{patel2020smart}
+    \item Human-in-the-loop (HITL) pipeline design, framework, survey, human dynamics
+        \begin{itemize}
+            \item ML HITL Pipelines/Frameworks \cite{van2021towards} \cite{chai2020humanoutlier} \cite{xin2018accelerating} \cite{xin2018helix}
+            \item Data HITL Pipelines/Frameworks \cite{li2017human}
+            \item Survey, book about HITL in ML/DA Pipelines \cite{xanthopoulos2020putting} \cite{budd2021survey} \cite{chai2020human} \cite{Munro2020human}
+            \item Human dynamics \cite{honeycutt2020soliciting}
+        \end{itemize}
+    \item Others (opinion, personal perspective) \cite{zanzotto2019human} \cite{bezrukavnikov2021neophyte}
+\end{itemize}
+\end{frame}
+%---------------------------------------------------------
+
+
+\section{Notable Literature}
+%---------------------------------------------------------
+\begin{frame}{Notable Literature}
+\begin{itemize}
+    \item <1-> \textit{A survey on active learning and human-in-the-loop deep learning for medical image analysis,}, S. Budd, E. C. Robinson, and B. Kainz
+    \item <2-> \textit{Human-in-the-loop techniques in machine learning,} C. Chai and G. Li
+    \item <3-> \textit{Human-in-the-loop machine learning,} R. Munro
+    \item <4-> \textit{Human-in-the-loop AI:  Requirements on future (unified) air traffic management systems}, J. Lundberg et al.
+\end{itemize}
+\end{frame}
+%---------------------------------------------------------
+
+
+\section{Preliminary Goals}
+%---------------------------------------------------------
+\begin{frame}{Preliminary Goals}
+\begin{itemize}
+    \item <1-> Understand the current state-of-the art in HITL Machine Learning and write a short report and some potential improvements.
+    \item <2-> Or compare some systems of HITL Machine Learning (pros and cons).
+    \item <3-> Or something different.
+\end{itemize}
+\end{frame}
+%---------------------------------------------------------
+
+
+\section{Some Questions/Concerns}
+%---------------------------------------------------------
+\begin{frame}{Some Questions/Concerns}
+\begin{itemize}
+    \item <1-> The topic seems a little bit theoretical.
+    \item <2-> Since time to conduct experiment involving human can be long and may not fit into the scope of the course.
+    \item <3-> Same as a proof of concept in software form.
+\end{itemize}
+\end{frame}
+%---------------------------------------------------------
+
+
+%---------------------------------------------------------
+\begin{frame}[t, allowframebreaks]
+\frametitle{References}
+\bibliographystyle{IEEEtran}
+\bibliography{ref}
+\end{frame}
+
+%---------------------------------------------------------
+%Example of the \pause command
+% \begin{frame}
+% In this slide \pause
+
+% the text will be partially visible \pause
+
+% And finally everything will be there
+% \end{frame}
+%---------------------------------------------------------
+
+
+%---------------------------------------------------------
+%Highlighting text
+% \begin{frame}
+% \frametitle{Sample frame title}
+
+% In this slide, some important text will be
+% \alert{highlighted} because it's important.
+% Please, don't abuse it.
+
+% \begin{block}{Remark}
+% Sample text
+% \end{block}
+
+% \begin{alertblock}{Important theorem}
+% Sample text in red box
+% \end{alertblock}
+
+% \begin{examples}
+% Sample text in green box. The title of the block is ``Examples".
+% \end{examples}
+% \end{frame}
+%---------------------------------------------------------
+
+
+%---------------------------------------------------------
+%Two columns
+% \begin{frame}
+% \frametitle{Two-column slide}
+
+% \begin{columns}
+
+% \column{0.5\textwidth}
+% This is a text in first column.
+% $$E=mc^2$$
+% \begin{itemize}
+% \item First item
+% \item Second item
+% \end{itemize}
+
+% \column{0.5\textwidth}
+% This text will be in the second column
+% and on a second tought this is a nice looking
+% layout in some cases.
+% \end{columns}
+% \end{frame}
+%---------------------------------------------------------
+
+
+\end{document}

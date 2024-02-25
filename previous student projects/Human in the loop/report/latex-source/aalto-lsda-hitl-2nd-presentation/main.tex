@@ -1,0 +1,161 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{bibentry}
+
+%------------------------------------------------------------
+%This block of code defines the information to appear in the
+%Title page
+\title[HITL ML/DA Workflows] %optional
+{Human-in-the-loop for Machine Learning/Data Analytics Workflows}
+\subtitle{Second Presentation}
+
+\author[An Dan Nguyen] % (optional)
+{An Dan Nguyen\\dan.nguyen@aalto.fi}
+
+\date[LSCA-2021] % (optional)
+{Large-scale Computing and Data Analysis\\14 May 2021}
+
+%End of title page configuration block
+%------------------------------------------------------------
+
+
+%------------------------------------------------------------
+%The next block of commands puts the table of contents at the 
+%beginning of each section and highlights the current section:
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+%------------------------------------------------------------
+
+
+\begin{document}
+%The next statement creates the title page.
+\frame{\titlepage}
+
+%---------------------------------------------------------
+%This block of code is for the table of contents after
+%the title page
+\begin{frame}
+\frametitle{Table of Contents}
+\tableofcontents
+\end{frame}
+%---------------------------------------------------------
+
+
+\section{Human In the Loop Machine Learning}
+%---------------------------------------------------------
+\begin{frame}
+\frametitle{Human In the Loop Machine Learning}
+
+\begin{itemize}
+    \item <1-> Human can involve in every steps of machine learning pipeline.
+    \item <2-> Data Extraction, Data Integration, Data Cleaning, Data
+Annotation and Iterative labeling, Model training and inference.
+    \item <3-> Although there are some common theme and techniques, the human in the loop solutions are tailored according to specific situations. 
+    \item <4-> $\rightarrow$ Need to understand the details of the problem needed to solve.
+\end{itemize}
+
+\end{frame}
+%---------------------------------------------------------
+
+
+\section{Human-Centered Design of Decision-Support Systems}
+%---------------------------------------------------------
+\begin{frame}{Human-Centered Design of Decision-Support Systems \cite{smith2009human}}
+\begin{enumerate}
+    \item <1-> Iterative Human-Centered Design Processes.
+    \item <2-> Need Analysis $\rightarrow$ User, Context, Task identification and understanding $\rightarrow$ Identify problem $\rightarrow$ Propose solution $\rightarrow$ Repeat.
+\end{enumerate}
+\end{frame}
+%---------------------------------------------------------
+
+
+\section{Next step}
+%---------------------------------------------------------
+\begin{frame}{Next step}
+\begin{itemize}
+    \item Perform the Need Analysis $\rightarrow$ Interviewing Maarit's team to understand the problem or need.
+    \item Identify and understand User, Context, Task.
+    \item Then identify the problem and potential solution will come later.
+\end{itemize}
+\end{frame}
+%---------------------------------------------------------
+
+
+%---------------------------------------------------------
+\begin{frame}[t, allowframebreaks]
+\frametitle{References}
+\bibliographystyle{IEEEtran}
+\bibliography{ref}
+\end{frame}
+
+%---------------------------------------------------------
+%Example of the \pause command
+% \begin{frame}
+% In this slide \pause
+
+% the text will be partially visible \pause
+
+% And finally everything will be there
+% \end{frame}
+%---------------------------------------------------------
+
+
+%---------------------------------------------------------
+%Highlighting text
+% \begin{frame}
+% \frametitle{Sample frame title}
+
+% In this slide, some important text will be
+% \alert{highlighted} because it's important.
+% Please, don't abuse it.
+
+% \begin{block}{Remark}
+% Sample text
+% \end{block}
+
+% \begin{alertblock}{Important theorem}
+% Sample text in red box
+% \end{alertblock}
+
+% \begin{examples}
+% Sample text in green box. The title of the block is ``Examples".
+% \end{examples}
+% \end{frame}
+%---------------------------------------------------------
+
+
+%---------------------------------------------------------
+%Two columns
+% \begin{frame}
+% \frametitle{Two-column slide}
+
+% \begin{columns}
+
+% \column{0.5\textwidth}
+% This is a text in first column.
+% $$E=mc^2$$
+% \begin{itemize}
+% \item First item
+% \item Second item
+% \end{itemize}
+
+% \column{0.5\textwidth}
+% This text will be in the second column
+% and on a second tought this is a nice looking
+% layout in some cases.
+% \end{columns}
+% \end{frame}
+%---------------------------------------------------------
+
+
+\end{document}

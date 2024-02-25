@@ -1,0 +1,10 @@
+{
+  "redis_address": "localhost",
+  "redis_port": 6379,
+  "source": "data",
+  "target": "cloud",
+  "notification": "reporting",
+  "process_name": "training",
+  "process_config_file": "config/training_config.json",
+  "num_threads": 3
+}
